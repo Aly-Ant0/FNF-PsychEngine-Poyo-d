@@ -3948,7 +3948,6 @@ class PlayState extends MusicBeatState
 			if (SONG.validScore)
 			{
 				#if !switch
-				if(Math.isNaN(percent)) percent = 0;
 				Highscore.saveScore(SONG.song, songScore, storyDifficulty, 0);
 				#end
 			}
@@ -4081,7 +4080,7 @@ class PlayState extends MusicBeatState
 			var rating:FlxSprite = new FlxSprite();
 			var score:Float = 350;
 
-			var daRating = daNote.rating;
+			var daRating = 'sick';
 
 			switch(daRating)
 			{
