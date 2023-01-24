@@ -55,8 +55,8 @@ class FlxHitbox extends FlxSpriteGroup {
 		{
 		  button.alpha = 0;
 		}
-		hitbox.onOver.callback = hitbox.onDown.callback;
-		hitbox.onOut.callback = hitbox.onUp.callback;
+		button.onOver.callback = button.onDown.callback;
+		button.onOut.callback = button.onUp.callback;
 		return button;
 	}
 
