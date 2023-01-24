@@ -4434,6 +4434,7 @@ class PlayState extends MusicBeatState
 	{
 		if (ClientPrefs.inputSystem == 'PE 0.6.3')
 		{
+			var note:Note = daNote;
 			var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
 			//trace(noteDiff, ' ' + Math.abs(note.strumTime - Conductor.songPosition));
 	
@@ -4470,7 +4471,6 @@ class PlayState extends MusicBeatState
 				{
 					songHits++;
 					totalPlayed++;
-					RecalculateRating(false);
 				}
 			}
 	
@@ -4623,7 +4623,7 @@ class PlayState extends MusicBeatState
 			var rating:FlxSprite = new FlxSprite();
 			var score:Float = 350;
 	
-			var daRating = 'sick';
+			var daRating = daNote.rating;
 	
 			switch (daRating)
 			{
@@ -5155,7 +5155,6 @@ class PlayState extends MusicBeatState
 			if(!practiceMode) songScore -= 10;
 	
 			totalPlayed++;
-			RecalculateRating(true);
 	
 			var char:Character = boyfriend;
 			if(daNote.gfNote) {
@@ -5203,6 +5202,51 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
+	}
+
+	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
+	{
+		if(ClientPrefs.ghostTapping) return; //fuck it
+
+		if (!boyfriend.stunned)
+		{
+			health -= 0.05 * healthLoss;
+			if(instakillOnMiss)
+			{
+				vocals.volume = 0;
+				doDeathCheck(true);
+			}
+
+			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
+			{
+				gf.playAnim('sad');
+			}
+			combo = 0;
+
+			if(!practiceMode) songScore -= 10;
+			if(!endingSong) {
+				songMisses++;
+			}
+			totalPlayed++;
+
+			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
+			// FlxG.log.add('played imss note');
+
+			/*boyfriend.stunned = true;
+
+			// get stunned for 1/60 of a second, makes you able to
+			new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
+			{
+				boyfriend.stunned = false;
+			});*/
+
+			if(boyfriend.hasMissAnimations) {
+				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
+			}
+			vocals.volume = 0;
+		}
+		callOnLuas('noteMissPress', [direction]);
 	}
 
 	/*function badNoteCheck()
