@@ -4686,8 +4686,8 @@ class PlayState extends MusicBeatState
 				spr.playAnim('pressed');
 				spr.resetAnim = 0;
 			}
-			callOnLuas('onKeyPress', [key]);
 		}
+		callOnLuas('onKeyPress', [key]);
 		//trace('pressed: ' + controlArray);
 	}
 
@@ -4713,9 +4713,9 @@ class PlayState extends MusicBeatState
 				spr.playAnim('static');
 				spr.resetAnim = 0;
 			}
-			callOnLuas('onKeyRelease', [key]);
 		}
 		//trace('released: ' + controlArray);
+		callOnLuas('onKeyRelease', [key]);
 	}
 
 	private function getKeyFromEvent(key:FlxKey):Int
@@ -4990,8 +4990,6 @@ class PlayState extends MusicBeatState
 				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 				char.playAnim(animToPlay, true);
 			}
-	
-			callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		}
 		if (ClientPrefs.inputSystem == 'KE 1.5.2')
 		{
@@ -5026,6 +5024,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
+		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
@@ -5209,8 +5208,7 @@ class PlayState extends MusicBeatState
 				var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 				var leData:Int = Math.round(Math.abs(note.noteData));
 				var leType:String = note.noteType;
-				callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-	
+
 				if (!note.isSustainNote)
 				{
 					note.kill();
@@ -5231,6 +5229,7 @@ class PlayState extends MusicBeatState
 				{
 					popUpScore(note);
 					combo += 1;
+					health += note.hitHealth * healthGain;
 				}
 				switch (note.noteData)
 				{
@@ -5259,6 +5258,7 @@ class PlayState extends MusicBeatState
 				note.destroy();
 			}
 		}
+		callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 	}
 
 	function opponentNoteHit(note:Note):Void
