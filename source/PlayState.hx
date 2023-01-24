@@ -1371,7 +1371,6 @@ class PlayState extends MusicBeatState
 		super.create();
 
 		cacheCountdown();
-		cachePopUpScore();
 		for (key => type in precacheList)
 		{
 			//trace('Key $key is type $type');
@@ -2316,9 +2315,6 @@ class PlayState extends MusicBeatState
 	public function updateScore(miss:Bool = false)
 	{
 		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + ratingName
-		+ (ratingName != '?' ? ' (${Highscore.floorDecimal(ratingPercent * 100, 2)}%) - $ratingFC' : '');
 
 		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
 		{
@@ -3314,7 +3310,6 @@ class PlayState extends MusicBeatState
 		#if debug
 		if(!endingSong && !startingSong) {
 			if (FlxG.keys.justPressed.ONE) {
-				KillNotes();
 				FlxG.sound.music.onComplete();
 			}
 			if(FlxG.keys.justPressed.TWO) { //Go 10 seconds into the future :O
@@ -4346,9 +4341,7 @@ class PlayState extends MusicBeatState
 							dontCheck = true;
 					}
 
-					if (perfectMode)
-						goodNoteHit(possibleNotes[0]);
-					else if (possibleNotes.length > 0 && !dontCheck)
+					if (possibleNotes.length > 0 && !dontCheck)
 					{
 						if (!ClientPrefs.ghostTapping)
 						{
@@ -4427,7 +4420,6 @@ class PlayState extends MusicBeatState
 				case 3:
 					boyfriend.playAnim('singRIGHTmiss', true);
 			}
-			updateAccuracy();
 		}
 	}
 
@@ -4473,9 +4465,6 @@ class PlayState extends MusicBeatState
 
 				// add newest note to front of notesHitArray
 				// the oldest notes are at the end and are removed first
-				if (!note.isSustainNote)
-					notesHitArray.unshift(Date.now());
-
 				if (!note.wasGoodHit)
 				{
 					if (!note.isSustainNote)
@@ -4483,10 +4472,6 @@ class PlayState extends MusicBeatState
 						popUpScore(note);
 						combo += 1;
 					}
-					else
-						totalNotesHit += 1;
-	
-
 					switch (note.noteData)
 					{
 						case 2:
@@ -4512,8 +4497,6 @@ class PlayState extends MusicBeatState
 					note.kill();
 					notes.remove(note, true);
 					note.destroy();
-					
-					updateAccuracy();
 				}
 			}
 
@@ -5002,58 +4985,6 @@ class PlayState extends MusicBeatState
 			spr.resetAnim = time;
 		}
 	}
-
-	public var ratingName:String = '?';
-	public var ratingPercent:Float;
-	public var ratingFC:String;
-	public function RecalculateRating(badHit:Bool = false) {
-		setOnLuas('score', songScore);
-		setOnLuas('misses', songMisses);
-		setOnLuas('hits', songHits);
-
-		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
-		if(ret != FunkinLua.Function_Stop)
-		{
-			if(totalPlayed < 1) //Prevent divide by 0
-				ratingName = '?';
-			else
-			{
-				// Rating Percent
-				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-				//trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
-
-				// Rating Name
-				if(ratingPercent >= 1)
-				{
-					ratingName = ratingStuff[ratingStuff.length-1][0]; //Uses last string
-				}
-				else
-				{
-					for (i in 0...ratingStuff.length-1)
-					{
-						if(ratingPercent < ratingStuff[i][1])
-						{
-							ratingName = ratingStuff[i][0];
-							break;
-						}
-					}
-				}
-			}
-
-			// Rating FC
-			ratingFC = "";
-			if (sicks > 0) ratingFC = "SFC";
-			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
-			else if (songMisses >= 10) ratingFC = "Clear";
-		}
-		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
-		setOnLuas('rating', ratingPercent);
-		setOnLuas('ratingName', ratingName);
-		setOnLuas('ratingFC', ratingFC);
-	}
-
 	#if ACHIEVEMENTS_ALLOWED
 	private function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
