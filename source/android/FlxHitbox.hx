@@ -8,7 +8,8 @@ import flixel.tweens.FlxEase;
 import flixel.ui.FlxButton;
 import flixel.FlxSprite;
 
-class FlxHitbox extends FlxSpriteGroup {
+class FlxHitbox extends FlxSpriteGroup
+{
 	public var hitbox:FlxSpriteGroup;
 
 	public var buttonLeft:FlxButton;
@@ -18,8 +19,9 @@ class FlxHitbox extends FlxSpriteGroup {
 
 	public var orgAlpha:Float = 0.75;
 	public var orgAntialiasing:Bool = true;
-	
-	public function new(?alphaAlt:Float = 0.75, ?antialiasingAlt:Bool = true) {
+
+	public function new(?alphaAlt:Float = 0.75, ?antialiasingAlt:Bool = true)
+	{
 		super();
 
 		orgAlpha = alphaAlt;
@@ -42,29 +44,32 @@ class FlxHitbox extends FlxSpriteGroup {
 		add(hitbox_hint);
 	}
 
-	public function createhitbox(x:Float = 0, y:Float = 0, frames:String) {
+	public function createhitbox(x:Float = 0, y:Float = 0, frames:String)
+	{
 		var button = new FlxButton(x, y);
 		button.loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
 		button.antialiasing = orgAntialiasing;
-		button.alpha = 0;// sorry but I can't hard lock the hitbox alpha
+		button.alpha = 0; // sorry but I can't hard lock the hitbox alpha
 		button.onDown.callback = function()
 		{
 			button.alpha = 1;
 		}
 		button.onUp.callback = function()
 		{
-		  button.alpha = 0;
+			button.alpha = 0;
 		}
 		button.onOver.callback = button.onDown.callback;
 		button.onOut.callback = button.onUp.callback;
 		return button;
 	}
 
-	public function getFrames():FlxAtlasFrames {
+	public function getFrames():FlxAtlasFrames
+	{
 		return Paths.getSparrowAtlas('androidcontrols/hitbox');
 	}
 
-	override public function destroy():Void {
+	override public function destroy():Void
+	{
 		super.destroy();
 
 		buttonLeft = null;
