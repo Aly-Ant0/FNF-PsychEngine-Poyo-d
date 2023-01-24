@@ -1340,9 +1340,6 @@ class PlayState extends MusicBeatState
 		{
 			startCountdown();
 		}
-		RecalculateRating();
-
-		//PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
 		if(ClientPrefs.hitsoundVolume > 0) precacheList.set('hitsound', 'sound');
 		precacheList.set('missnote1', 'sound');
 		precacheList.set('missnote2', 'sound');
@@ -3951,9 +3948,8 @@ class PlayState extends MusicBeatState
 			if (SONG.validScore)
 			{
 				#if !switch
-				var percent:Float = ratingPercent;
 				if(Math.isNaN(percent)) percent = 0;
-				Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
+				Highscore.saveScore(SONG.song, songScore, storyDifficulty, 0);
 				#end
 			}
 			playbackRate = 1;
@@ -5004,14 +5000,6 @@ class PlayState extends MusicBeatState
 				}
 				switch(achievementName)
 				{
-					case 'ur_bad':
-						if(ratingPercent < 0.2 && !practiceMode) {
-							unlock = true;
-						}
-					case 'ur_good':
-						if(ratingPercent >= 1 && !usedPractice) {
-							unlock = true;
-						}
 					case 'roadkill_enthusiast':
 						if(Achievements.henchmenDeath >= 100) {
 							unlock = true;
