@@ -47,9 +47,16 @@ class FlxHitbox extends FlxSpriteGroup {
 		button.loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
 		button.antialiasing = orgAntialiasing;
 		button.alpha = 0;// sorry but I can't hard lock the hitbox alpha
-		button.onDown.callback = function (){FlxTween.num(0, 0.75, 0.075, {ease:FlxEase.circInOut}, function(alpha:Float){ button.alpha = alpha;});};
-		button.onUp.callback = function (){FlxTween.num(0.75, 0, 0.1, {ease:FlxEase.circInOut}, function(alpha:Float){ button.alpha = alpha;});}
-		button.onOut.callback = function (){FlxTween.num(button.alpha, 0, 0.2, {ease:FlxEase.circInOut}, function(alpha:Float){ button.alpha = alpha;});}
+		button.onDown.callback = function()
+		{
+			button.alpha = 1;
+		}
+		button.onUp.callback = function()
+		{
+		  button.alpha = 0;
+		}
+		hint.onOver.callback = hint.onDown.callback;
+		hint.onOut.callback = hint.onUp.callback;
 		return button;
 	}
 

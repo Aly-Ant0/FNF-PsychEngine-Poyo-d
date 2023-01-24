@@ -92,6 +92,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.onChange = onChangeVibration;
 		#end
 
+		var option:Option = new Option('Input System',
+			"WARNING: THIS WILL EFFECT HOW THE GAME PLAYS ENTIRELY",
+			'inputSystem',
+			'string',
+			'PE 0.6.3',
+			['PE 0.6.3', 'KE 1.5.2']);
+		addOption(option);
+
 		var option:Option = new Option('Hitsound Volume',
 			'Funny notes does \"Tick!\" when you hit them."',
 			'hitsoundVolume',
