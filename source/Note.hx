@@ -83,10 +83,7 @@ class Note extends FlxSprite
 
 	public var hitHealth:Float = 0.023;
 	public var missHealth:Float = 0.0475;
-	if (ClientPrefs.inputSystem == 'PE 0.6.3')
-		public var rating:String = 'unknown';
-	else if (ClientPrefs.inputSystem == 'KE 1.5.2')
-		public var rating:String = "shit";
+	public var rating:String = 'unknown';
 	public var ratingMod:Float = 0; // 9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
 	public var ratingDisabled:Bool = false;
 
