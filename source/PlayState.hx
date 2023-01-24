@@ -5094,6 +5094,9 @@ class PlayState extends MusicBeatState
  */
 	function getKeyPresses(note:Note):Int
 	{
+		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+		var leData:Int = Math.round(Math.abs(note.noteData));
+		var leType:String = note.noteType;
 		var possibleNotes:Array<Note> = []; // copypasted but you already know that
 
 		notes.forEachAlive(function(daNote:Note)
@@ -5204,10 +5207,6 @@ class PlayState extends MusicBeatState
 				}
 				note.wasGoodHit = true;
 				vocals.volume = 1;
-	
-				var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
-				var leData:Int = Math.round(Math.abs(note.noteData));
-				var leType:String = note.noteType;
 
 				if (!note.isSustainNote)
 				{
