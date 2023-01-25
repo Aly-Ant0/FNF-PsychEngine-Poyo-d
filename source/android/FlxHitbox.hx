@@ -9,7 +9,7 @@ import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.ui.FlxButton;
 import flixel.FlxSprite;
-import flixel.FlxBasic
+import flixel.FlxBasic;
 import flixel.FlxG;
 
 // Mofifications by saw (m.a. jigsaw)
@@ -38,6 +38,7 @@ class FlxHitbox extends FlxSpriteGroup
 		for (i in 0...buttonsArray.length)
 		{
 			buttonsArray[i] = createHitbox(xPos * (i - 1), 0, buttonsArray.length);
+			add(buttonsArray[i]);
 		}
 	}
 
