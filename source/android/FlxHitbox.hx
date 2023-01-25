@@ -1,18 +1,19 @@
 package android;
 
-import flixel.FlxG;
-import flixel.util.FlxDestroyUtil;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxDestroyUtil;
 import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
-import flixel.FlxSprite;
 import flixel.ui.FlxButton;
+import flixel.FlxSprite;
+import flixel.FlxBasic
+import flixel.FlxG;
 
 // Mofifications by saw (m.a. jigsaw)
-// VS Poyo hitbox mod by Poyo
+// hitbox mod by Poyo
 class FlxHitbox extends FlxSpriteGroup 
 {
 	public var hitbox:FlxSpriteGroup;
