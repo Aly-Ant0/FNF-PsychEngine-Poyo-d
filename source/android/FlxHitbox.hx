@@ -22,29 +22,31 @@ class FlxHitbox extends FlxSpriteGroup
 	public var buttonUp:FlxButton;
 	public var buttonRight:FlxButton;
 
+	public var buttonsArray = [
+		buttonLeft,
+		buttonRight,
+		buttonUp,
+		buttonRight
+	];
+
 	public function new()
 	{
 		super();
 
-		hitbox = new FlxSpriteGroup();
-
-		buttonLeft = new FlxButton(0, 0);
-		buttonDown = new FlxButton(0, 0);
-		buttonUp = new FlxButton(0, 0);
-		buttonRight = new FlxButton(0, 0);
+		for (i in 0...buttonsArray.length)
+		{
+			var button = buttonsArray[i]
+			button = createHitbox((FlxG.width / buttonsArray.length) * i)
+		}
 	}
 
 	public function createHitbox(x:Float = 0, y:Float = 0, frames:String, ?color:Int):FlxButton
 	{
-		var hint:FlxHitboxHint = new FlxHitboxHint(x, y, frames);
-		hint.antialiasing = ClientPrefs.globalAntialiasing;
-		hint.setGraphicSize(Std.int(FlxG.width / 4), FlxG.height);
-		hint.updateHitbox();
-		hint.solid = false;
-		hint.immovable = true;
-		hint.alpha = 0.1;
-		hint.scrollFactor.set();
-		return hint;
+		var button = new FlxButton(X, 0);
+	  button.setGraphicSize(Std.int(FlxG.width / 4), FlxG.height);
+	  button.updateHitbox();
+	  button.alpha = 0;
+	  return button;
 	}
 
 	override function destroy()
@@ -58,33 +60,5 @@ class FlxHitbox extends FlxSpriteGroup
 		buttonDown = null;
 		buttonUp = null;
 		buttonRight = null;
-	}
-}
-
-class FlxHitboxHint extends FlxButton
-{
-	public function new(x:Float = 0, y:Float = 0, frames:String)
-	{
-		super(x, y);
-
-		loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
-		alpha = 0.00001;
-
-		#if FLX_DEBUG
-		ignoreDrawDebug = true;
-		#end
-	}
-
-	override function update(elapsed:Float)
-	{
-		if (pressed && alpha != 1)
-			alpha = 1;
-		else if (!pressed && alpha != 0.1)
-			alpha = 0.1;
-	}
-
-	public function getFrames():FlxAtlasFrames
-	{
-		return Paths.getSparrowAtlas('androidcontrols/hitbox');
 	}
 }
