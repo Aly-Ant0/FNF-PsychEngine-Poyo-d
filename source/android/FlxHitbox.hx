@@ -43,7 +43,7 @@ class FlxHitbox extends FlxSpriteGroup
 	public function createHitbox(x:Float = 0, y:Float = 0, widthSplit:Float):FlxButton
 	{
 		var button = new FlxButton(x, 0);
-	  button.setGraphicSize(Std.int(FlxG.width / buttonsArray.length, FlxG.height);
+	  button.setGraphicSize(Std.int(FlxG.width / buttonsArray.length), FlxG.height);
 	  button.updateHitbox();
 	  button.alpha = 0;
 	  return button;
