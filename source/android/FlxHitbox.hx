@@ -7,9 +7,9 @@ import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.addons.ui.FlxMobileButton;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
+import android.FlxButton;
 
 // Mofifications by saw (m.a. jigsaw)
 // VS Poyo hitbox mod by Poyo
@@ -17,10 +17,10 @@ class FlxHitbox extends FlxSpriteGroup
 {
 	public var hitbox:FlxSpriteGroup;
 
-	public var buttonLeft:FlxMobileButton;
-	public var buttonDown:FlxMobileButton;
-	public var buttonUp:FlxMobileButton;
-	public var buttonRight:FlxMobileButton;
+	public var buttonLeft:FlxButton;
+	public var buttonDown:FlxButton;
+	public var buttonUp:FlxButton;
+	public var buttonRight:FlxButton;
 
 	public function new()
 	{
@@ -28,10 +28,10 @@ class FlxHitbox extends FlxSpriteGroup
 
 		hitbox = new FlxSpriteGroup();
 
-		buttonLeft = new FlxMobileButton(0, 0);
-		buttonDown = new FlxMobileButton(0, 0);
-		buttonUp = new FlxMobileButton(0, 0);
-		buttonRight = new FlxMobileButton(0, 0);
+		buttonLeft = new FlxButton(0, 0);
+		buttonDown = new FlxButton(0, 0);
+		buttonUp = new FlxButton(0, 0);
+		buttonRight = new FlxButton(0, 0);
 
 		hitbox.add(add(buttonLeft = createHitbox(0, 0, 'left', 0xFFFF00FF)));
 		hitbox.add(add(buttonDown = createHitbox(FlxG.width / 4, 0, 'down', 0xFF00FFFF)));
@@ -39,7 +39,7 @@ class FlxHitbox extends FlxSpriteGroup
 		hitbox.add(add(buttonRight = createHitbox((FlxG.width / 2) + (FlxG.width / 4), 0, 'right', 0xFFFF0000)));
 	}
 
-	public function createHitbox(x:Float = 0, y:Float = 0, frames:String, ?color:Int):FlxMobileButton
+	public function createHitbox(x:Float = 0, y:Float = 0, frames:String, ?color:Int):FlxButton
 	{
 		var hint:FlxHitboxHint = new FlxHitboxHint(x, y, frames);
 		hint.antialiasing = ClientPrefs.globalAntialiasing;
@@ -76,7 +76,7 @@ class FlxHitbox extends FlxSpriteGroup
 	}
 }
 
-class FlxHitboxHint extends FlxMobileButton
+class FlxHitboxHint extends FlxButton
 {
 	public function new(x:Float = 0, y:Float = 0, frames:String)
 	{
