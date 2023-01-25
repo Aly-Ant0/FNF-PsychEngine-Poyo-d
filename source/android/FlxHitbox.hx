@@ -36,7 +36,7 @@ class FlxHitbox extends FlxSpriteGroup
 
 		for (i in 0...buttonsArray.length)
 		{
-			buttonsArray[i] = createHitbox(xPos * (i - 1), 0, i
+			buttonsArray[i] = createHitbox(xPos * (i - 1), 0, buttonsArray.length);
 		}
 	}
 
