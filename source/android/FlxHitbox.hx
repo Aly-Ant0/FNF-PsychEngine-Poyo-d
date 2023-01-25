@@ -9,7 +9,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
-import android.FlxButton;
+import flixel.ui.FlxButton;
 
 // Mofifications by saw (m.a. jigsaw)
 // VS Poyo hitbox mod by Poyo
@@ -32,11 +32,6 @@ class FlxHitbox extends FlxSpriteGroup
 		buttonDown = new FlxButton(0, 0);
 		buttonUp = new FlxButton(0, 0);
 		buttonRight = new FlxButton(0, 0);
-
-		hitbox.add(add(buttonLeft = createHitbox(0, 0, 'left', 0xFFFF00FF)));
-		hitbox.add(add(buttonDown = createHitbox(FlxG.width / 4, 0, 'down', 0xFF00FFFF)));
-		hitbox.add(add(buttonUp = createHitbox(FlxG.width / 2, 0, 'up', 0xFF00FF00)));
-		hitbox.add(add(buttonRight = createHitbox((FlxG.width / 2) + (FlxG.width / 4), 0, 'right', 0xFFFF0000)));
 	}
 
 	public function createHitbox(x:Float = 0, y:Float = 0, frames:String, ?color:Int):FlxButton
@@ -49,16 +44,6 @@ class FlxHitbox extends FlxSpriteGroup
 		hint.immovable = true;
 		hint.alpha = 0.1;
 		hint.scrollFactor.set();
-		hint.onDown.callback = function()
-		{
-			hint.alpha = 1;
-		}
-		hint.onUp.callback = function()
-		{
-		  hint.alpha = 0.1;
-		}
-		hint.onOver.callback = hint.onDown.callback;
-		hint.onOut.callback = hint.onUp.callback;
 		return hint;
 	}
 
@@ -85,12 +70,17 @@ class FlxHitboxHint extends FlxButton
 		loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
 		alpha = 0.00001;
 
-		onDown.callback = function() {FlxTween.num(0.00001, 0.75, 0.075, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
-		onUp.callback = function() {FlxTween.num(0.75, 0.00001, 0.1, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
-		onOut.callback = function() {FlxTween.num(alpha, 0.00001, 0.2, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
 		#if FLX_DEBUG
 		ignoreDrawDebug = true;
 		#end
+	}
+
+	override function update(elapsed:Float)
+	{
+		if (pressed && alpha != 1)
+			alpha = 1;
+		else if (!pressed && alpha != 0.1)
+			alpha = 0.1;
 	}
 
 	public function getFrames():FlxAtlasFrames
