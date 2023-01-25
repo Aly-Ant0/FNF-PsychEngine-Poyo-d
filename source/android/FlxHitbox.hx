@@ -22,7 +22,7 @@ class FlxHitbox extends FlxSpriteGroup
 	public var buttonUp:FlxButton;
 	public var buttonRight:FlxButton;
 
-	public var buttonsArray:Array<FlxButton> = [
+	public var buttonsArray:Array<FlxBasic> = [
 		buttonLeft,
 		buttonRight,
 		buttonUp,
@@ -32,18 +32,18 @@ class FlxHitbox extends FlxSpriteGroup
 	public function new()
 	{
 		super();
+		var xPos = FlxG.width / buttonsArray.length
 
 		for (i in 0...buttonsArray.length)
 		{
-			var button:FlxButton = buttonsArray[i];
-			button = createHitbox((FlxG.width / buttonsArray.length) * (Std.int(i - 1)), i);
+			buttonsArray[i] = createHitbox(xPos * (i - 1), 0, i
 		}
 	}
 
 	public function createHitbox(x:Float = 0, y:Float = 0, widthSplit:Float):FlxButton
 	{
 		var button = new FlxButton(x, 0);
-	  button.setGraphicSize(Std.int(FlxG.width / 4), FlxG.height);
+	  button.setGraphicSize(Std.int(FlxG.width / buttonsArray.length, FlxG.height);
 	  button.updateHitbox();
 	  button.alpha = 0;
 	  return button;
