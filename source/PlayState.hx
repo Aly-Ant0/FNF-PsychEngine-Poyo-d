@@ -4880,7 +4880,7 @@ class PlayState extends MusicBeatState
 				});
 			}
 	
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left)
+			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !controls.NOTE_LEFT && !controls.NOTE_DOWN && !controls.NOTE_UP && !controls.NOTE_RIGHT)
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 				{
@@ -5128,7 +5128,7 @@ class PlayState extends MusicBeatState
 		return ret;
 	}
 
-	function noteMiss(direction:Int = 1, daNote:Note):Void
+	function noteMiss(direction:Int = 1, ?daNote:Note):Void
 	{
 		if (ClientPrefs.inputSystem == 'Vanilla 0.2.7.1')
 		{
@@ -5188,7 +5188,6 @@ class PlayState extends MusicBeatState
 	
 			//For testing purposes
 			//trace(daNote.missHealth);
-			songMisses++;
 			vocals.volume = 0;
 			if(!practiceMode) songScore -= 10;
 	
@@ -5238,6 +5237,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
+		songMisses++;
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
@@ -5305,6 +5305,16 @@ class PlayState extends MusicBeatState
 			noteMiss(1);
 	}
 
+	function noteCheck(keyP:Bool, note:Note):Void
+	{
+		if (keyP)
+			goodNoteHit(note);
+		else
+		{
+			badNoteCheck();
+		}
+	}
+
 	function getKeyPresses(note:Note):Int
 	{
 		var possibleNotes:Array<Note> = []; // copypasted but you already know that
@@ -5333,7 +5343,7 @@ class PlayState extends MusicBeatState
 			{
 				if (!note.isSustainNote)
 				{
-					popUpScore(note.strumTime);
+					popUpScore(note);
 					combo += 1;
 				}
 	
