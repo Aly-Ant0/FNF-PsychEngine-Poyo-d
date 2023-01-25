@@ -387,27 +387,58 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (mustPress)
+		if (ClientPrefs.inputSystem == 'PE 0.6.3')
 		{
-			// ok river
-			if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
-				canBeHit = true;
+			if (mustPress)
+			{
+				// ok river
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
+					canBeHit = true;
+				else
+					canBeHit = false;
+	
+				if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+					tooLate = true;
+			}
 			else
+			{
 				canBeHit = false;
-
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
-				tooLate = true;
+	
+				if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
+				{
+					if ((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
+						wasGoodHit = true;
+				}
+			}
 		}
 		else
 		{
-			canBeHit = false;
-
-			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
+			if (mustPress)
 			{
-				if ((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
+				// The * 0.5 is so that it's easier to hit them too late, instead of too early
+				if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+					&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+					canBeHit = true;
+				else
+					canBeHit = false;
+	
+				if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+					tooLate = true;
+			}
+			else
+			{
+				canBeHit = false;
+	
+				if (strumTime <= Conductor.songPosition)
 					wasGoodHit = true;
 			}
+		}
+
+		if (tooLate)
+		{
+			if (alpha > 0.3)
+				alpha = 0.3;
 		}
 
 		if (tooLate && !inEditor)
