@@ -5238,7 +5238,7 @@ class PlayState extends MusicBeatState
 		if (daNote != null)
 			callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		else
-			callOnLuas('onGhostTap', [direction])
+			callOnLuas('onGhostTap', [direction]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
