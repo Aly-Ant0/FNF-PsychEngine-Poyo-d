@@ -5130,6 +5130,44 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
+		if (ClientPrefs.inputSystem == 'Vanilla 0.2.7.1')
+		{
+			if (!boyfriend.stunned)
+			{
+				health -= 0.04;
+				if (combo > 5 && gf.animOffsets.exists('sad'))
+				{
+					gf.playAnim('sad');
+				}
+				combo = 0;
+	
+				songScore -= 10;
+	
+				FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+				// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
+				// FlxG.log.add('played imss note');
+	
+				boyfriend.stunned = true;
+	
+				// get stunned for 5 seconds
+				new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
+				{
+					boyfriend.stunned = false;
+				});
+	
+				switch (direction)
+				{
+					case 0:
+						boyfriend.playAnim('singLEFT-miss', true);
+					case 1:
+						boyfriend.playAnim('singDOWN-miss', true);
+					case 2:
+						boyfriend.playAnim('singUP-miss', true);
+					case 3:
+						boyfriend.playAnim('singRIGHT-miss', true);
+				}
+			}
+		}
 		if (ClientPrefs.inputSystem == 'PE 0.6.3')
 		{
 			notes.forEachAlive(function(note:Note) {
@@ -5190,17 +5228,17 @@ class PlayState extends MusicBeatState
 				switch (direction)
 				{
 					case 0:
-						boyfriend.playAnim('singLEFTmiss', true);
+						boyfriend.playAnim('singLEFT-miss', true);
 					case 1:
-						boyfriend.playAnim('singDOWNmiss', true);
+						boyfriend.playAnim('singDOWN-miss', true);
 					case 2:
-						boyfriend.playAnim('singUPmiss', true);
+						boyfriend.playAnim('singUP-miss', true);
 					case 3:
 						boyfriend.playAnim('singRIGHTmiss', true);
 				}
-				callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 			}
 		}
+		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
@@ -5248,26 +5286,25 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	/*function badNoteCheck()
-		{
-			// just double pasting this shit cuz fuk u
-			// REDO THIS SYSTEM!
-			var upP = controls.UP_P;
-			var rightP = controls.RIGHT_P;
-			var downP = controls.DOWN_P;
-			var leftP = controls.LEFT_P;
+	function badNoteCheck()
+	{
+		// just double pasting this shit cuz fuk u
+		// REDO THIS SYSTEM!
+		var upP = controls.NOTE_UP_P;
+		var rightP = controls.NOTE_RIGHT_P;
+		var downP = controls.NOTE_DOWN_P;
+		var leftP = controls.NOTE_LEFT_P;
 
-			if (leftP)
-				noteMiss(0);
-			if (upP)
-				noteMiss(2);
-			if (rightP)
-				noteMiss(3);
-			if (downP)
-				noteMiss(1);
-			updateAccuracy();
-		}
- */
+		if (leftP)
+			noteMiss(0);
+		if (upP)
+			noteMiss(2);
+		if (rightP)
+			noteMiss(3);
+		if (downP)
+			noteMiss(1);
+	}
+
 	function getKeyPresses(note:Note):Int
 	{
 		var possibleNotes:Array<Note> = []; // copypasted but you already know that
@@ -5290,6 +5327,52 @@ class PlayState extends MusicBeatState
 		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 		var leData:Int = Math.round(Math.abs(note.noteData));
 		var leType:String = note.noteType;
+		if (ClientPrefs.inputSystem == 'Vanilla 0.2.7.1')
+		{
+			if (!note.wasGoodHit)
+			{
+				if (!note.isSustainNote)
+				{
+					popUpScore(note.strumTime);
+					combo += 1;
+				}
+	
+				if (note.noteData >= 0)
+					health += 0.023;
+				else
+					health += 0.004;
+	
+				switch (note.noteData)
+				{
+					case 0:
+						boyfriend.playAnim('singLEFT', true);
+					case 1:
+						boyfriend.playAnim('singDOWN', true);
+					case 2:
+						boyfriend.playAnim('singUP', true);
+					case 3:
+						boyfriend.playAnim('singRIGHT', true);
+				}
+	
+				playerStrums.forEach(function(spr:FlxSprite)
+				{
+					if (Math.abs(note.noteData) == spr.ID)
+					{
+						spr.animation.play('confirm', true);
+					}
+				});
+	
+				note.wasGoodHit = true;
+				vocals.volume = 1;
+	
+				if (!note.isSustainNote)
+				{
+					note.kill();
+					notes.remove(note, true);
+					note.destroy();
+				}
+			}
+		}
 		if (ClientPrefs.inputSystem == 'PE 0.6.3')
 		{
 			if (!note.wasGoodHit)

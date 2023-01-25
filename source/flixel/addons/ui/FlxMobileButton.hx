@@ -1,4 +1,4 @@
-package android.flixel;
+package flixel.addons.ui;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,7 +16,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.input.touch.FlxTouch;
 
 // Mofifications by saw (m.a. jigsaw)
-class FlxButton extends FlxTypedButton<FlxText>
+class FlxMobileButton extends FlxTypedButton<FlxText>
 {
 	public static inline var NORMAL:Int = 0;
 	public static inline var HIGHLIGHT:Int = 1;
