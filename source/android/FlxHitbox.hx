@@ -36,7 +36,7 @@ class FlxHitbox extends FlxSpriteGroup
 		for (i in 0...buttonsArray.length)
 		{
 			var button = buttonsArray[i]
-			button = createHitbox((FlxG.width / buttonsArray.length) * i)
+			button = createHitbox((FlxG.width / buttonsArray.length) * i);
 		}
 	}
 
