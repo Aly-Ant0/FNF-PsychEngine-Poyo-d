@@ -5022,9 +5022,9 @@ class PlayState extends MusicBeatState
 					case 3:
 						boyfriend.playAnim('singRIGHTmiss', true);
 				}
+				callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 			}
 		}
-		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
@@ -5068,8 +5068,8 @@ class PlayState extends MusicBeatState
 				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
 			}
 			vocals.volume = 0;
+			callOnLuas('noteMissPress', [direction]);
 		}
-		callOnLuas('noteMissPress', [direction]);
 	}
 
 	/*function badNoteCheck()

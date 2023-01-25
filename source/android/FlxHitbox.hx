@@ -1,74 +1,43 @@
-package android;
+package mobile.flixel;
 
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
+import openfl.display.Shape;
+import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import flixel.ui.FlxButton;
-import flixel.FlxSprite;
+import mobile.flixel.FlxButton;
 
+/**
+ * A zone with 4 hint's (A hitbox).
+ * It's really easy to customize the layout.
+ *
+ * @author Mihai Alexandru (M.A. Jigsaw)
+ */
 class FlxHitbox extends FlxSpriteGroup
 {
-	public var hitbox:FlxSpriteGroup;
+	public var buttonLeft:FlxButton = new FlxButton(0, 0);
+	public var buttonDown:FlxButton = new FlxButton(0, 0);
+	public var buttonUp:FlxButton = new FlxButton(0, 0);
+	public var buttonRight:FlxButton = new FlxButton(0, 0);
 
-	public var buttonLeft:FlxButton;
-	public var buttonDown:FlxButton;
-	public var buttonUp:FlxButton;
-	public var buttonRight:FlxButton;
-
-	public var orgAlpha:Float = 0.75;
-	public var orgAntialiasing:Bool = true;
-
-	public function new(?alphaAlt:Float = 0.75, ?antialiasingAlt:Bool = true)
+	/**
+	 * Create the zone.
+	 */
+	public function new()
 	{
 		super();
 
-		orgAlpha = alphaAlt;
-		orgAntialiasing = antialiasingAlt;
+		add(buttonLeft = createHint(0, 0, 0, 0, 0xFF00FF));
+		add(buttonDown = createHint(FlxG.width / 4, 0, 0, 0, 0x00FFFF));
+		add(buttonUp = createHint(FlxG.width / 2, 0, 0, 0, 0x00FF00));
+		add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, 0, 0, 0xFF0000));
 
-		buttonLeft = new FlxButton(0, 0);
-		buttonDown = new FlxButton(0, 0);
-		buttonUp = new FlxButton(0, 0);
-		buttonRight = new FlxButton(0, 0);
-
-		hitbox = new FlxSpriteGroup();
-		hitbox.add(add(buttonLeft = createhitbox(0, 0, "left")));
-		hitbox.add(add(buttonDown = createhitbox(320, 0, "down")));
-		hitbox.add(add(buttonUp = createhitbox(640, 0, "up")));
-		hitbox.add(add(buttonRight = createhitbox(960, 0, "right")));
-
-		var hitbox_hint:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('androidcontrols/hitbox_hint'));
-		hitbox_hint.antialiasing = orgAntialiasing;
-		hitbox_hint.alpha = orgAlpha;
-		add(hitbox_hint);
+		scrollFactor.set();
 	}
 
-	public function createhitbox(x:Float = 0, y:Float = 0, frames:String)
-	{
-		var button = new FlxButton(x, y);
-		button.loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
-		button.antialiasing = orgAntialiasing;
-		button.alpha = 0; // sorry but I can't hard lock the hitbox alpha
-		button.onDown.callback = function()
-		{
-			button.alpha = 1;
-		}
-		button.onUp.callback = function()
-		{
-			button.alpha = 0;
-		}
-		button.onOver.callback = button.onDown.callback;
-		button.onOut.callback = button.onUp.callback;
-		return button;
-	}
-
-	public function getFrames():FlxAtlasFrames
-	{
-		return Paths.getSparrowAtlas('androidcontrols/hitbox');
-	}
-
-	override public function destroy():Void
+	/**
+	 * Clean up memory.
+	 */
+	override function destroy()
 	{
 		super.destroy();
 
@@ -76,5 +45,53 @@ class FlxHitbox extends FlxSpriteGroup
 		buttonDown = null;
 		buttonUp = null;
 		buttonRight = null;
+	}
+
+	private function createHintGraphic(Width:Int, Height:Int, Color:Int = 0xFFFFFF):BitmapData
+	{
+		var shape:Shape = new Shape();
+		shape.graphics.beginFill(Color);
+		shape.graphics.lineStyle(10, Color, 1);
+		shape.graphics.drawRect(0, 0, Width, Height);
+		shape.graphics.endFill();
+
+		var bitmap:BitmapData = new BitmapData(Width, Height, true, 0);
+		bitmap.draw(shape);
+		return bitmap;
+	}
+
+	private function createHint(X:Float, Y:Float, Width:Int, Height:Int, Color:Int = 0xFFFFFF):FlxButton
+	{
+		if (Width == 0)
+			Width = Std.int(FlxG.width / 4);
+
+		if (Height == 0)
+			Height = FlxG.height;
+
+		var hint:FlxButton = new FlxButton(X, Y);
+		hint.loadGraphic(createHintGraphic(Width, Height, Color));
+		hint.solid = false;
+		hint.immovable = true;
+		hint.scrollFactor.set();
+		hint.alpha = 0.00001;
+		hint.onDown.callback = function()
+		{
+			if (hint.alpha != 0.2)
+				hint.alpha = 0.2;
+		}
+		hint.onUp.callback = function()
+		{
+			if (hint.alpha != 0.00001)
+				hint.alpha = 0.00001;
+		}
+		hint.onOut.callback = function()
+		{
+			if (hint.alpha != 0.00001)
+				hint.alpha = 0.00001;
+		}
+		#if FLX_DEBUG
+		hint.ignoreDrawDebug = true;
+		#end
+		return hint;
 	}
 }

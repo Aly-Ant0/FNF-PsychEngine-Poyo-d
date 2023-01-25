@@ -160,6 +160,10 @@ class ClientPrefs
 		{
 			opponentStrums = FlxG.save.data.opponentStrums;
 		}
+		if (FlxG.save.data.inputSystem != null)
+		{
+			inputSystem = FlxG.save.data.inputSystem;
+		}
 		if (FlxG.save.data.showFPS != null)
 		{
 			showFPS = FlxG.save.data.showFPS;
