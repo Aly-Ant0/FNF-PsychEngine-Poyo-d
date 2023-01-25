@@ -32,7 +32,7 @@ class FlxHitbox extends FlxSpriteGroup
 	public function new()
 	{
 		super();
-		var xPos = FlxG.width / buttonsArray.length
+		var xPos = FlxG.width / buttonsArray.length;
 
 		for (i in 0...buttonsArray.length)
 		{
