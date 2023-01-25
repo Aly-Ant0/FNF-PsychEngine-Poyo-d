@@ -1404,11 +1404,11 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		#end
 
-		/*if(!ClientPrefs.controllerMode)
+		if(!ClientPrefs.controllerMode && ClientPrefs.inputSystem =='PE 0.6.3')
 			{
 				FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 				FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		}*/
+			}
 		callOnLuas('onCreatePost', []);
 
 		super.create();
