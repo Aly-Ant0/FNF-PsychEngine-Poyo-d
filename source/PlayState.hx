@@ -5828,11 +5828,11 @@ class PlayState extends MusicBeatState
 			FunkinLua.hscript = null;
 		#end
 
-		/*if(!ClientPrefs.controllerMode)
+		if(!ClientPrefs.controllerMode && ClientPrefs.inputSystem == 'PE 0.6.3')
 		{
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-	}*/
+		}
 		FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
 		super.destroy();
