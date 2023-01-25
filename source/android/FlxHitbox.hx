@@ -1,97 +1,100 @@
-package android;
+package android.flixel;
 
-import openfl.display.BitmapData;
-import openfl.display.Shape;
 import flixel.FlxG;
+import flixel.util.FlxDestroyUtil;
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
-import flixel.FlxButton;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
+import flixel.FlxSprite;
 
-/**
- * A zone with 4 hint's (A hitbox).
- * It's really easy to customize the layout.
- *
- * @author Mihai Alexandru (M.A. Jigsaw)
- */
-class FlxHitbox extends FlxSpriteGroup
+// Mofifications by saw (m.a. jigsaw)
+// VS Poyo hitbox mod by Poyo
+class FlxHitbox extends FlxSpriteGroup 
 {
-	public var buttonLeft:FlxButton = new FlxButton(0, 0);
-	public var buttonDown:FlxButton = new FlxButton(0, 0);
-	public var buttonUp:FlxButton = new FlxButton(0, 0);
-	public var buttonRight:FlxButton = new FlxButton(0, 0);
+	public var hitbox:FlxSpriteGroup;
 
-	/**
-	 * Create the zone.
-	 */
+	public var buttonLeft:FlxButton;
+	public var buttonDown:FlxButton;
+	public var buttonUp:FlxButton;
+	public var buttonRight:FlxButton;
+
 	public function new()
 	{
 		super();
 
-		add(buttonLeft = createHint(0, 0, 0, 0, 0xFF00FF));
-		add(buttonDown = createHint(FlxG.width / 4, 0, 0, 0, 0x00FFFF));
-		add(buttonUp = createHint(FlxG.width / 2, 0, 0, 0, 0x00FF00));
-		add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, 0, 0, 0xFF0000));
+		hitbox = new FlxSpriteGroup();
 
-		scrollFactor.set();
+		buttonLeft = new FlxButton(0, 0);
+		buttonDown = new FlxButton(0, 0);
+		buttonUp = new FlxButton(0, 0);
+		buttonRight = new FlxButton(0, 0);
+
+		hitbox.add(add(buttonLeft = createHitbox(0, 0, 'left', 0xFFFF00FF)));
+		hitbox.add(add(buttonDown = createHitbox(FlxG.width / 4, 0, 'down', 0xFF00FFFF)));
+		hitbox.add(add(buttonUp = createHitbox(FlxG.width / 2, 0, 'up', 0xFF00FF00)));
+		hitbox.add(add(buttonRight = createHitbox((FlxG.width / 2) + (FlxG.width / 4), 0, 'right', 0xFFFF0000)));
 	}
 
-	/**
-	 * Clean up memory.
-	 */
+	public function createHitbox(x:Float = 0, y:Float = 0, frames:String, ?color:Int):FlxButton
+	{
+		var hint:FlxHitboxHint = new FlxHitboxHint(x, y, frames);
+		hint.antialiasing = ClientPrefs.globalAntialiasing;
+		hint.setGraphicSize(Std.int(FlxG.width / 4), FlxG.height);
+		hint.updateHitbox();
+		hint.solid = false;
+		hint.immovable = true;
+		hint.alpha = 0.1;
+		hint.scrollFactor.set();
+		hint.onDown.callback = function()
+		{
+			hint.alpha = 1;
+		}
+		hint.onUp.callback = function()
+		{
+		  hint.alpha = 0.1;
+		}
+		hint.onOver.callback = hint.onDown.callback;
+		hint.onOut.callback = hint.onUp.callback;
+		return hint;
+	}
+
 	override function destroy()
 	{
 		super.destroy();
+
+		hitbox = FlxDestroyUtil.destroy(hitbox);
+		hitbox = null;
 
 		buttonLeft = null;
 		buttonDown = null;
 		buttonUp = null;
 		buttonRight = null;
 	}
+}
 
-	private function createHintGraphic(Width:Int, Height:Int, Color:Int = 0xFFFFFF):BitmapData
+class FlxHitboxHint extends FlxButton
+{
+	public function new(x:Float = 0, y:Float = 0, frames:String)
 	{
-		var shape:Shape = new Shape();
-		shape.graphics.beginFill(Color);
-		shape.graphics.lineStyle(10, Color, 1);
-		shape.graphics.drawRect(0, 0, Width, Height);
-		shape.graphics.endFill();
+		super(x, y);
 
-		var bitmap:BitmapData = new BitmapData(Width, Height, true, 0);
-		bitmap.draw(shape);
-		return bitmap;
+		loadGraphic(FlxGraphic.fromFrame(getFrames().getByName(frames)));
+		alpha = 0.00001;
+
+		onDown.callback = function() {FlxTween.num(0.00001, 0.75, 0.075, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
+		onUp.callback = function() {FlxTween.num(0.75, 0.00001, 0.1, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
+		onOut.callback = function() {FlxTween.num(alpha, 0.00001, 0.2, {ease:FlxEase.circInOut}, function(value:Float) {alpha = value;});}
+		#if FLX_DEBUG
+		ignoreDrawDebug = true;
+		#end
 	}
 
-	private function createHint(X:Float, Y:Float, Width:Int, Height:Int, Color:Int = 0xFFFFFF):FlxButton
+	public function getFrames():FlxAtlasFrames
 	{
-		if (Width == 0)
-			Width = Std.int(FlxG.width / 4);
-
-		if (Height == 0)
-			Height = FlxG.height;
-
-		var hint:FlxButton = new FlxButton(X, Y);
-		hint.loadGraphic(createHintGraphic(Width, Height, Color));
-		hint.solid = false;
-		hint.immovable = true;
-		hint.scrollFactor.set();
-		hint.alpha = 0.00001;
-		hint.onDown.callback = function()
-		{
-			if (hint.alpha != 0.2)
-				hint.alpha = 0.2;
-		}
-		hint.onUp.callback = function()
-		{
-			if (hint.alpha != 0.00001)
-				hint.alpha = 0.00001;
-		}
-		hint.onOut.callback = function()
-		{
-			if (hint.alpha != 0.00001)
-				hint.alpha = 0.00001;
-		}
-		#if FLX_DEBUG
-		hint.ignoreDrawDebug = true;
-		#end
-		return hint;
+		return Paths.getSparrowAtlas('androidcontrols/hitbox');
 	}
 }
