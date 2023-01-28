@@ -216,7 +216,7 @@ class FTMMainMenuScreen extends MusicBeatState
 					{
 						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
+							FlxTween.tween(spr, {alpha: 0, x:+FlxG.width*1.5}, 0.4, {
 								ease: FlxEase.quadOut,
 								onComplete: function(twn:FlxTween)
 								{
@@ -226,7 +226,7 @@ class FTMMainMenuScreen extends MusicBeatState
 						}
 						else
 						{
-							FlxTween.tween(spr, {x: FlxG.width * 1.5})
+							FlxTween.tween(spr, {x: FlxG.width * -1.5}, 0.4, {ease: FlxEase.expoInOut});
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
 								var daChoice:String = optionShit[curSelected];
@@ -280,7 +280,6 @@ class FTMMainMenuScreen extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			spr.animation.play('idle');
 			spr.offset.y = 0;
 			spr.updateHitbox();
 
@@ -304,7 +303,7 @@ class MountainsMainMenuButton extends FlxSprite
 	{
 		super(x, y);
 
-		loadGraphic(Paths.image('mainmenu/FTM_' + portName, 'shared'));
+		loadGraphic(Paths.image('$portName', 'shared'));
 		//trace('Test added: ' + WeekData.getWeekNumber(weekNum) + ' (' + weekNum + ')');
 		antialiasing = ClientPrefs.globalAntialiasing;
 	}
