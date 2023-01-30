@@ -216,7 +216,7 @@ class FTMMainMenuScreen extends MusicBeatState
 					{
 						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {alpha: 0, x:+FlxG.width*1.5}, 0.4, {
+							FlxTween.tween(spr, {alpha: 0, x: (FlxG.width * FlxG.width) * 1.5}, 0.4, {
 								ease: FlxEase.quadOut,
 								onComplete: function(twn:FlxTween)
 								{
@@ -226,7 +226,7 @@ class FTMMainMenuScreen extends MusicBeatState
 						}
 						else
 						{
-							FlxTween.tween(spr, {x: FlxG.width * -1.5}, 0.4, {ease: FlxEase.expoInOut});
+							FlxTween.tween(spr, {x: (FlxG.width * FlxG.width) * -1.5}, 0.4, {ease: FlxEase.expoInOut});
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
 								var daChoice:String = optionShit[curSelected];
